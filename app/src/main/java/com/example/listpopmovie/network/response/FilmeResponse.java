@@ -10,6 +10,13 @@ public class FilmeResponse {
     @Json(name = "original_title")
     private final String tituloOriginal;
 
+    @Json(name = "original_language")
+    private final String originalLang;
+
+    public String getOriginalLang() {
+        return originalLang;
+    }
+
     public String getCaminhoPoster() {
         return caminhoPoster;
     }
@@ -18,8 +25,9 @@ public class FilmeResponse {
         return tituloOriginal;
     }
 
-    public FilmeResponse(String caminhoPoster, String tituloOriginal) {
+    public FilmeResponse(String caminhoPoster, String tituloOriginal, String originalLang) {
         this.caminhoPoster = caminhoPoster;
         this.tituloOriginal = tituloOriginal;
+        this.originalLang = originalLang;
     }
 }

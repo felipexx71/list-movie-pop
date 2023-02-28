@@ -2,17 +2,26 @@ package com.example.listpopmovie.models;
 
 public class Movie {
 
-    private String moviename;
+    private String titulo;
+    private String poster;
+    private String lang;
 
-    public String getMoviename() {
-        return moviename;
+    public String getLang() {
+        return lang;
     }
 
-    public void setMoviename(String moviename) {
-        this.moviename = moviename;
+    public String getPoster() {
+        return poster;
     }
 
-    public Movie(String moviename) {
-        this.moviename = moviename;
+    public Movie(String titulo, String poster, String lang) {
+        this.titulo = titulo;
+        this.poster = poster;
+        this.lang = lang;
     }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
 }
