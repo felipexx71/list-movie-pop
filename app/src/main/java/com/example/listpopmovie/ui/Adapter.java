@@ -1,4 +1,4 @@
-package com.example.listpopmovie.movieadapter;
+package com.example.listpopmovie.ui;
 
 import android.view.LayoutInflater;
 import android.view.View;

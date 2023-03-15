@@ -1,18 +1,17 @@
-package com.example.listpopmovie.activity;
+package com.example.listpopmovie.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.widget.AbsListView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.listpopmovie.R;
 import com.example.listpopmovie.mapper.FilmeMapper;
-import com.example.listpopmovie.movieadapter.Adapter;
+import com.example.listpopmovie.models.Movie;
 import com.example.listpopmovie.network.ApiService;
 import com.example.listpopmovie.network.response.FilmeResponse;
 import com.example.listpopmovie.network.response.FilmeResult;
@@ -24,10 +23,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ListaFilmesContrato.ListaFilmesView{
     private RecyclerView recycler;
     private List<FilmeResponse> listaFilmes = new ArrayList<>();
     private Adapter adapter;
+    private ListaFilmesContrato.ListaFilmesPresenter presenter;
     FilmeMapper mapper = new FilmeMapper();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +36,13 @@ public class MainActivity extends AppCompatActivity {
 
         configAdapter();
 
-        pullFilmes();
+        presenter = new ListaFilmesPresenter();
+
+        presenter.setView(this);
+
+        presenter.obtemFilmes();
+
+
     }
 
     private void configAdapter() {
@@ -44,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new Adapter();
 
-        RecyclerView.LayoutManager layout = new LinearLayoutManager(MainActivity.this);
+        RecyclerView.LayoutManager layout = new GridLayoutManager(this, 2);
 
         recycler.setLayoutManager(layout);
 
@@ -55,27 +61,19 @@ public class MainActivity extends AppCompatActivity {
         recycler.setAdapter(adapter);
     }
 
-    private void pullFilmes() {
-        ApiService.getInstance().obterFilmesPop("55e335efc9cdb311f542728b3ae1e497")
-                .enqueue(new Callback<FilmeResult>() {
-                    @Override
-                    public void onResponse(Call<FilmeResult> call, Response<FilmeResult> response) {
-                        if (response.isSuccessful()) {
-                            adapter.setFilmes(FilmeMapper
-                                    .deResponseParaDominio(response.body()
-                                            .getResults()));
-                        } else {
-                            showError();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<FilmeResult> call, Throwable t) {
-                        showError();
-                    }
-                });
+    @Override
+    public void mostraFilmes(List<Movie> filme) {
+        adapter.setFilmes(filme);
     }
-    private void showError() {
+
+    @Override
+    public void mostraErro() {
         Toast.makeText(this, "Erro ao obter lista de filmes!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.destruirView();
     }
 }
